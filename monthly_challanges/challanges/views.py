@@ -1,38 +1,48 @@
 from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseNotFound,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
-monthly_challenges={
-    "january":"Eat no meat for the entire month",
-    "february":"Walk fro at least 20 minutes every day",
-    "march":"Learn django"
+
+monthly_challanges = {
+    "january": "Eat no meat for the entire month!",
+    "february": "Walk for at least 20 minutes every day!",
+    "march": "Learn Django for at least 20 minutes every day!",
+    "april": "Eat no meat for the entire month!",
+    "may": "Walk for at least 20 minutes every day!",
+    "june": "Learn Django for at least 20 minutes every day!",
+    "july": "Eat no meat for the entire month!",
+    "august": "Walk for at least 20 minutes every day!",
+    "september": "Learn Django for at least 20 minutes every day!",
+    "october": "Eat no meat for the entire month!",
+    "november": "Walk for at least 20 minutes every day!",
+    "december": None
 }
 
 # Create your views here.
+
 def index(request):
-    list_items=''
-    months=list(monthly_challenges.keys())
+    months = list(monthly_challanges.keys())
 
-    for month in months:
-        capitalise_month=month.capitalize()
-        month_path=reverse("month-challenge",args=[month])
-        list_items+=f"<li><a href=\"{month_path}\">{capitalise_month}</a></li>"
+    return render(request, "challanges/index.html", {
+        "months": months
+    })
 
-    response_data=f"<ul>{list_items}</ul>"
-    return HttpResponse(response_data)
+def monthly_challange_by_number(request, month):
+    months = list(monthly_challanges.keys())
 
-def monthly_challenge_by_number(request, month):
-    months=list(monthly_challenges.keys())
-    if month>len(months):
+    if month > len(months):
         return HttpResponseNotFound("Invalid month")
-    
-    redirect_month=months[month-1]
-    redirect_path=reverse("month-challenge",args=[redirect_month])
+
+    redirect_month = months[month - 1]
+    redirect_path = reverse("month-challange", args=[redirect_month]) # /challange/january
     return HttpResponseRedirect(redirect_path)
 
-def monthly_challenge(request,month):
+
+def monthly_challange(request, month):
     try:
-        challenge_text=monthly_challenges[month]
-        response_data=f"<h1>{challenge_text}</h1>"
-        return HttpResponse(response_data)
+        challange_text = monthly_challanges[month]
+        return render(request, "challanges/challange.html", {
+            "text": challange_text,
+            "month_name": month
+        })
     except:
-        return HttpResponseNotFound(f"<h1>This month is not supported</h1>")
+        return HttpResponseNotFound("<h1>This month is not supported!</h1>")
