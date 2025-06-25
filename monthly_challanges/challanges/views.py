@@ -21,7 +21,6 @@ monthly_challanges = {
 
 def index(request):
     months = list(monthly_challanges.keys())
-
     return render(request, "challanges/index.html", {
         "months": months
     })
